@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>PakConnect — Connect with Pakistanis Worldwide</title>
+<meta name="description" content="PakConnect: meet people, share ideas, build friendships, discover meaningful relationships, and explore marriage — wherever you are in the world. The discussion-first community for Pakistanis and friends of Pakistani culture.">
+<meta name="keywords" content="Pakistani dating app, Pakistani friendship app, Pakistani marriage app, Pakistani community worldwide, Pakistanis abroad, Pakistani diaspora, meet Pakistanis online, Pakistani singles worldwide, Pakistani matchmaking">
+<meta property="og:title" content="PakConnect — Connect with Pakistanis Worldwide">
+<meta property="og:description" content="Meet people, share ideas, build friendships, discover meaningful relationships, and explore marriage — wherever you are in the world.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#0f766e">
+<link rel="stylesheet" href="styles.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication",
+ "name":"PakConnect","applicationCategory":"SocialNetworkingApplication",
+ "operatingSystem":"Web","offers":{"@type":"Offer","price":"0"},
+ "description":"Connect with Pakistanis worldwide — friendships, discussions, networking, relationships and marriage."}
+</script>
+</head>
+<body>
+<!-- App shell: mobile-first, max-width 480px centered on desktop -->
+<div id="shell">
+  <header id="topbar" hidden>
+    <button class="brand" id="brandBtn" aria-label="PakConnect home">
+      <svg class="star" viewBox="0 0 100 100" aria-hidden="true"><polygon points="50,0 57.7,31.5 85.4,14.6 68.5,42.3 100,50 68.5,57.7 85.4,85.4 57.7,68.5 50,100 42.3,68.5 14.6,85.4 31.5,57.7 0,50 31.5,42.3 14.6,14.6 42.3,31.5" fill="currentColor"/></svg>
+      <span>PakConnect</span>
+    </button>
+    <div class="topbar-actions">
+      <select id="modeSel" class="select select-sm" aria-label="Switch mode"></select>
+      <button id="themeBtn" class="icon-btn" aria-label="Toggle light/dark mode">🌙</button>
+    </div>
+  </header>
+
+  <main id="view" aria-live="polite"></main>
+
+  <nav id="bottomnav" hidden aria-label="Main navigation">
+    <button class="nav-item" data-route="discover"><span class="nav-ico">🔎</span><span>Discover</span></button>
+    <button class="nav-item" data-route="discussions"><span class="nav-ico">💬</span><span>Discussions</span></button>
+    <button class="nav-item" data-route="connections"><span class="nav-ico">🤝</span><span>Connections</span></button>
+    <button class="nav-item" data-route="messages"><span class="nav-ico">✉️</span><span>Messages</span></button>
+    <button class="nav-item" data-route="communities"><span class="nav-ico">🌍</span><span>Communities</span></button>
+    <button class="nav-item" data-route="profile"><span class="nav-ico">👤</span><span>Profile</span></button>
+  </nav>
+</div>
+
+<div id="modal-root"></div>
+<div id="toast-root" aria-live="polite"></div>
+
+<script src="js/data.js"></script>
+<script src="js/util.js"></script>
+<script src="js/store.js"></script>
+<script src="js/router.js"></script>
+<script src="js/views/landing.js"></script>
+<script src="js/views/onboarding.js"></script>
+<script src="js/views/discover.js"></script>
+<script src="js/views/discussions.js"></script>
+<script src="js/views/connections.js"></script>
+<script src="js/views/messages.js"></script>
+<script src="js/views/communities.js"></script>
+<script src="js/views/profile.js"></script>
+<script src="js/views/marriage.js"></script>
+<script src="js/views/safety.js"></script>
+<script src="js/views/admin.js"></script>
+<script>
+  // Boot. EXT-POINT: backend-auth — validate session token before init when backend exists.
+  PC.router.init();
+</script>
+</body>
+</html>
