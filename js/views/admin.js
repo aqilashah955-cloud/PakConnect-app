@@ -89,22 +89,31 @@ function adReportsHTML() {
     (done.length ? done.map(card).join('') : '<div class="empty">No resolved reports.</div>');
 }
 
-/* ---- Verification tab ---- */
+/* ---- Verification tab (build 2: shows the 3 submitted steps) ---- */
 function adVerificationHTML() {
   var esc = PC.util.esc;
   var list = PC.store.verifications() || [];
   if (!list.length) return '<div class="empty">No pending verification requests.</div>';
-  return list.map(function (v) {
+  var items = list.map(function (v) {
     var id = v.userId || v.id;
     var u = null;
     try { u = PC.store.getUser(id); } catch (e) { u = null; }
+    /* Steps submitted by the 3-step demo flow: {liveness, id, social}. */
+    var steps = v.steps || {};
+    var stepsHTML = '<div style="opacity:.75;font-size:.88em;margin-top:4px;">' +
+      '👁 Liveness: ' + (steps.liveness ? '✓' : '—') + ' &nbsp;·&nbsp; ' +
+      '🪪 ID: ' + (steps.id ? '✓' : '—') + ' &nbsp;·&nbsp; ' +
+      '🔗 Social: ' + (steps.social ? '<a href="' + esc(steps.social) + '" target="_blank" rel="noopener">' + esc(steps.social) + '</a>' : '—') +
+    '</div>';
     return '<div class="list-row">' +
-      '<span style="display:flex;align-items:center;gap:8px;">' + (u ? PC.util.avatarHTML(u, 'sm') : '') + esc(u ? u.name : String(id)) +
+      '<span style="flex:1;min-width:0;"><span style="display:flex;align-items:center;gap:8px;">' + (u ? PC.util.avatarHTML(u, 'sm') : '') + esc(u ? u.name : String(id)) +
       ' <span style="opacity:.6;font-size:.85em;">requested ' + esc(PC.util.timeAgo(v.ts || v.time || Date.now())) + '</span></span>' +
+      stepsHTML + '</span>' +
       '<span><button class="btn btn-primary btn-sm" data-approve="' + esc(id) + '">Approve</button> ' +
       '<button class="btn btn-ghost btn-sm" data-reject="' + esc(id) + '">Reject</button></span>' +
     '</div>';
   }).join('');
+  return '<p style="color:var(--muted,#666);font-size:.85em;">Demo verification queue — submissions are simulated; approving grants the ✓ Verified badge.</p>' + items;
 }
 
 /* ---- Suspicious tab ---- */

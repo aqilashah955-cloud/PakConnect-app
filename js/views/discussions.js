@@ -81,6 +81,103 @@ window.PC = window.PC || {};
     });
   }
 
+  /* ---- Polls (build 2) ---- */
+  function hasPolls() { return S && typeof S.pollsForTopic === 'function'; }
+
+  function pollCardHTML(poll) {
+    var myVote = (typeof S.myVote === 'function') ? S.myVote(poll.id) : null;
+    var total = 0;
+    (poll.options || []).forEach(function (o) { total += (o.votes || []).length; });
+    var opts = (poll.options || []).map(function (o) {
+      var v = (o.votes || []).length;
+      var pct = total ? Math.round(v / total * 100) : 0;
+      if (myVote) {
+        return '<div style="margin:6px 0">' +
+          '<div style="display:flex;justify-content:space-between;font-size:.9em;margin-bottom:4px">' +
+            '<span>' + U.esc(o.text) + (myVote === o.id ? ' ✓' : '') + '</span>' +
+            '<span>' + v + ' vote' + (v === 1 ? '' : 's') + '</span>' +
+          '</div>' +
+          '<div style="background:var(--line,#e5e5e5);border-radius:8px;height:10px;overflow:hidden">' +
+            '<div style="width:' + pct + '%;height:100%;background:var(--teal,#0aa);' +
+              'border-radius:8px;transition:width .6s ease"></div>' +
+          '</div>' +
+        '</div>';
+      }
+      return '<button class="btn btn-sm poll-vote" data-poll="' + U.esc(poll.id) + '"' +
+        ' data-option="' + U.esc(o.id) + '"' +
+        ' style="display:block;width:100%;margin:4px 0;text-align:left">' + U.esc(o.text) + '</button>';
+    }).join('');
+    return '<div class="card poll-card" style="margin-top:10px">' +
+      '<div style="font-weight:700;margin-bottom:6px">' + U.esc(poll.title) + '</div>' +
+      opts +
+      '<div style="margin-top:8px;font-size:.82em;color:var(--muted,#666)">' +
+        total + ' vote' + (total === 1 ? '' : 's') + ' total</div>' +
+    '</div>';
+  }
+
+  function openPollModal(topicId, onDone) {
+    var optFields = '';
+    for (var i = 1; i <= 4; i++) {
+      optFields += '<div class="field"><label class="label">Option ' + i +
+        (i > 2 ? ' (optional)' : '') + '</label>' +
+        '<input class="input" id="pollOpt' + i + '" maxlength="80" placeholder="Option ' + i + '"></div>';
+    }
+    var body =
+      '<div class="section-title">📊 New poll</div>' +
+      '<div class="field"><label class="label">Question</label>' +
+      '<input class="input" id="pollQ" maxlength="140" placeholder="Ask something…"></div>' +
+      optFields +
+      '<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:10px">' +
+        '<button class="btn btn-ghost" id="pollCancel">Cancel</button>' +
+        '<button class="btn btn-primary" id="pollCreate">Create poll</button>' +
+      '</div>';
+    var close = ui.modal(body);
+    document.getElementById('pollCancel').addEventListener('click', close);
+    document.getElementById('pollCreate').addEventListener('click', function () {
+      var q = document.getElementById('pollQ').value.trim();
+      var opts = [];
+      for (var j = 1; j <= 4; j++) {
+        var v = document.getElementById('pollOpt' + j).value.trim();
+        if (v) opts.push(v);
+      }
+      if (!q) { ui.toast('Please add a question.'); return; }
+      if (opts.length < 2) { ui.toast('Please add at least 2 options.'); return; }
+      if (typeof S.createPoll !== 'function') { ui.toast('Polls are not available yet.'); return; }
+      S.createPoll(topicId, q, opts);
+      if (typeof S.awardActivity === 'function') S.awardActivity('post');
+      close();
+      ui.toast('Poll posted.');
+      if (onDone) onDone();
+    });
+  }
+
+  function renderPollsSection(topicId) {
+    var sec = document.createElement('div');
+    if (!hasPolls()) return sec;
+    var polls = S.pollsForTopic(topicId) || [];
+    var h = '<div class="section-title" style="margin-top:16px">📊 Polls</div>';
+    if (!polls.length) {
+      h += '<div class="empty" style="padding:14px">No polls yet — be the first to ask the community!</div>';
+    } else {
+      h += polls.map(pollCardHTML).join('');
+    }
+    h += '<div style="margin-top:8px"><button class="btn btn-sm" id="newPollBtn">＋ New poll</button></div>';
+    sec.innerHTML = h;
+    Array.prototype.forEach.call(sec.querySelectorAll('.poll-vote'), function (btn) {
+      btn.addEventListener('click', function () {
+        if (typeof S.votePoll !== 'function') { ui.toast('Voting is not available yet.'); return; }
+        var ok = S.votePoll(btn.getAttribute('data-poll'), btn.getAttribute('data-option'));
+        if (ok === false) ui.toast('You have already voted in this poll.');
+        PC.router.refresh();
+      });
+    });
+    var nb = sec.querySelector('#newPollBtn');
+    if (nb) nb.addEventListener('click', function () {
+      openPollModal(topicId, function () { PC.router.refresh(); });
+    });
+    return sec;
+  }
+
   /* List of topics → /discussions */
   PC.views.discussions = function (el, params) {
     var topicId = params && params.topic;
@@ -152,6 +249,7 @@ window.PC = window.PC || {};
         list.appendChild(row);
       });
     }
+    wrap.appendChild(renderPollsSection(topicId));
     wrap.appendChild(list);
     el.appendChild(wrap);
 
