@@ -11,6 +11,10 @@ if (!PC.applyTheme) {
   };
 }
 
+/* Guarded access to build-2 store APIs (owned by another agent — may not exist
+   yet). Every call checks typeof first so the view never throws. */
+function pfHas(fn) { return !!(window.PC && PC.store && typeof PC.store[fn] === 'function'); }
+
 /* ---------------- PC.views.profile ---------------- */
 PC.views.profile = function (el, params) {
   var me = PC.store.me();
@@ -21,8 +25,15 @@ PC.views.profile = function (el, params) {
   var discCount = PC.store.participatedTopicIds(me.id).length;
   var theme = PC.store.settings().theme || 'light';
 
+  /* Login streak — counted ONCE here at profile render (router does NOT call it). */
+  var streak = pfHas('loginPing') ? (PC.store.loginPing() || 0) : 0;
+
+  /* Verification status chip (new 3-step flow stores {status, steps} or null). */
+  var ver = pfHas('myVerification') ? PC.store.myVerification() : null;
+
   var badges = '';
-  if (me.verified) badges += ' <span class="badge badge-verified">✓ Verified</span>';
+  if (me.verified || (ver && ver.status === 'approved')) badges += ' <span class="badge badge-verified">✓ Verified</span>';
+  if (ver && ver.status === 'pending') badges += ' <span class="chip">⏳ Verification pending</span>';
   if (me.demo) badges += ' <span class="badge badge-demo">demo</span>';
 
   var bits = [];
@@ -30,7 +41,45 @@ PC.views.profile = function (el, params) {
   if (me.country) bits.push(esc(me.country));
   if (me.city) bits.push(esc(me.city));
 
-  var premium = PC.seed.premiumFeatures || [];
+  /* Badge showcase: PC.seed.badgeDefs with earned (S.myBadges()) highlighted. */
+  var defs = (window.PC && PC.seed && Array.isArray(PC.seed.badgeDefs)) ? PC.seed.badgeDefs : [];
+  var earned = pfHas('myBadges') ? (PC.store.myBadges() || []) : [];
+  var badgeHTML = '';
+  if (defs.length) {
+    badgeHTML = '<div class="section-title">🏅 Badges</div>' +
+      '<div class="badge-grid">' +
+      defs.map(function (d) {
+        var id = String(d.id || d.name || '');
+        var got = earned.indexOf(id) !== -1;
+        return '<div class="' + (got ? 'badge-earned' : 'badge-locked') + '" title="' + esc(d.desc || d.description || '') + '">' +
+          '<div style="font-size:1.5em;">' + esc(d.icon || '🏅') + '</div>' +
+          '<div style="font-weight:700;font-size:.82em;">' + esc(d.name || d.title || id || 'Badge') + '</div>' +
+        '</div>';
+      }).join('') + '</div>';
+  }
+
+  /* Profile prompts Q&A cards. */
+  var myP = pfHas('myPrompts') ? (PC.store.myPrompts() || []) : [];
+  var promptsHTML = '<div class="card">' +
+    '<div class="section-title">💬 About me</div>';
+  if (myP.length) {
+    promptsHTML += myP.map(function (p) {
+      return '<div class="prompt-card">' +
+        '<div class="prompt-q">' + esc(p.prompt || '') + '</div>' +
+        '<div>' + esc(p.answer || '') + '</div>' +
+      '</div>';
+    }).join('');
+  } else {
+    promptsHTML += '<p style="opacity:.7;">Answer 3 fun prompts so people get to know the real you.</p>';
+  }
+  promptsHTML += '<button class="btn btn-ghost btn-sm" data-go="/profile/edit">' +
+    (myP.length ? 'Edit prompts' : 'Add your prompts') + '</button></div>';
+
+  /* Premium slot — wired by premium.js (document-level delegation). */
+  var premHTML = (PC.views && typeof PC.views.premiumCard === 'function')
+    ? PC.views.premiumCard()
+    : '<div class="premium-card"><div class="section-title">✨ PakConnect Premium</div>' +
+      '<p>More ways to connect — coming soon.</p></div>';
 
   el.innerHTML =
     '<div class="page-title">My profile</div>' +
@@ -44,7 +93,12 @@ PC.views.profile = function (el, params) {
           (me.mode ? '<span class="chip">' + esc(me.mode) + '</span>' : '') +
         '</div>' +
       '</div>' +
+      '<div style="margin-top:12px;"><span class="streak-chip">🔥 ' + streak + '-day streak</span></div>' +
     '</div>' +
+
+    (badgeHTML ? '<div class="card">' + badgeHTML + '</div>' : '') +
+
+    promptsHTML +
 
     '<div class="card">' +
       '<div class="section-title">💡 A note on match scores</div>' +
@@ -69,18 +123,9 @@ PC.views.profile = function (el, params) {
       '<div class="menu-row" id="pfReset"><span>🗑️ Reset demo data</span><span>›</span></div>' +
     '</div>' +
 
-    '<div class="premium-card">' +
-      '<div class="section-title">✨ PakConnect Premium</div>' +
-      '<p>More ways to connect — coming soon.</p>' +
-      (premium.length
-        ? '<ul>' + premium.map(function (f) {
-            return '<li>' + esc(typeof f === 'string' ? f : (f.title || f.name || '')) + '</li>';
-          }).join('') + '</ul>'
-        : '') +
-      '<button class="btn btn-primary" id="pfPremium">Notify me — coming soon</button>' +
-    '</div>';
+    premHTML;
 
-  el.querySelectorAll('.menu-row[data-go]').forEach(function (row) {
+  el.querySelectorAll('.menu-row[data-go],button[data-go]').forEach(function (row) {
     row.addEventListener('click', function () { PC.router.go(row.getAttribute('data-go')); });
   });
 
@@ -98,10 +143,6 @@ PC.views.profile = function (el, params) {
       PC.ui.toast('Demo data reset');
       PC.router.go('/');
     });
-  });
-
-  el.querySelector('#pfPremium').addEventListener('click', function () {
-    PC.ui.toast('PakConnect Premium is coming soon');
   });
 };
 
@@ -145,12 +186,153 @@ function pfChipGroup(id, label, opts, selected) {
   return '<div class="field"><div class="label">' + PC.util.esc(label) + '</div><div id="' + id + '">' + chips + '</div></div>';
 }
 
+/* ---- 3-step verification flow (simulated demo): liveness hold → ID check →
+       optional social link. No phone/CNIC/address/password fields anywhere. */
+function pfVerificationFlow() {
+  var esc = PC.util.esc;
+  var close = PC.ui.modal('<div id="pcVerFlow"></div>');
+  var card = document.querySelector('#modal-root .modal-card:last-child');
+  if (!card) { close(); return; }
+  var social = '';
+
+  function step1() {
+    card.innerHTML =
+      '<div class="section-title">Step 1 of 3 — Liveness (simulated)</div>' +
+      '<p>Press and <b>hold</b> the button for 2 seconds to confirm you\'re a real person. ' +
+      'Demo only — no camera is used.</p>' +
+      '<button type="button" class="btn btn-primary" id="vHold" style="position:relative;overflow:hidden;width:100%;">' +
+        '<span id="vHoldFill" style="position:absolute;left:0;top:0;bottom:0;width:0;background:rgba(255,255,255,.35);"></span>' +
+        '<span style="position:relative;">Hold me</span></button>' +
+      '<div style="text-align:right;margin-top:12px;"><button type="button" class="btn btn-ghost" id="vCancel">Cancel</button></div>';
+    var hold = card.querySelector('#vHold');
+    var fill = card.querySelector('#vHoldFill');
+    var timer = null, iv = null, start = 0;
+    function stop(ok) {
+      if (timer) { clearTimeout(timer); timer = null; }
+      if (iv) { clearInterval(iv); iv = null; }
+      if (!ok && fill) fill.style.width = '0';
+    }
+    hold.addEventListener('pointerdown', function () {
+      start = Date.now();
+      iv = setInterval(function () {
+        fill.style.width = Math.min(100, (Date.now() - start) / 20) + '%';
+      }, 50);
+      timer = setTimeout(function () { stop(true); step2(); }, 2000);
+    });
+    ['pointerup', 'pointerleave', 'pointercancel'].forEach(function (ev) {
+      hold.addEventListener(ev, function () {
+        if (timer) { stop(false); PC.ui.toast('Keep holding for the full 2 seconds'); }
+      });
+    });
+    card.querySelector('#vCancel').addEventListener('click', close);
+  }
+
+  function step2() {
+    card.innerHTML =
+      '<div class="section-title">Step 2 of 3 — ID check (simulated)</div>' +
+      '<p>In the live app you\'d photograph an ID document here. This demo skips real ' +
+      'documents entirely — <b>nothing is uploaded</b>.</p>' +
+      '<button type="button" class="btn btn-primary" id="vIdBtn">Verify ID (demo)</button>' +
+      '<div class="poll-bar" id="vIdBar" style="display:none;margin-top:12px;"><div class="poll-fill" id="vIdFill"></div></div>' +
+      '<div style="text-align:right;margin-top:12px;">' +
+        '<button type="button" class="btn btn-ghost" id="vBack1">Back</button> ' +
+        '<button type="button" class="btn btn-ghost" id="vCancel2">Cancel</button></div>';
+    card.querySelector('#vIdBtn').addEventListener('click', function () {
+      var bar = card.querySelector('#vIdBar');
+      var fill = card.querySelector('#vIdFill');
+      bar.style.display = 'block';
+      var p = 0;
+      var iv = setInterval(function () {
+        p += 12;
+        if (p >= 100) { clearInterval(iv); step3(); return; }
+        fill.style.width = p + '%';
+      }, 150);
+    });
+    card.querySelector('#vBack1').addEventListener('click', step1);
+    card.querySelector('#vCancel2').addEventListener('click', close);
+  }
+
+  function step3() {
+    card.innerHTML =
+      '<div class="section-title">Step 3 of 3 — Social profile (optional)</div>' +
+      '<p>Paste a link to a public social profile so reviewers can confirm you\'re real. ' +
+      '<b>Optional</b> — and never share passwords.</p>' +
+      '<div class="field"><label class="label" for="vSocial">Social profile link</label>' +
+      '<input class="input" type="url" id="vSocial" placeholder="https://…" value="' + esc(social) + '"></div>' +
+      '<div style="text-align:right;margin-top:12px;">' +
+        '<button type="button" class="btn btn-ghost" id="vBack2">Back</button> ' +
+        '<button type="button" class="btn btn-primary" id="vSubmit">Submit for review</button></div>';
+    var input = card.querySelector('#vSocial');
+    input.addEventListener('input', function () { social = input.value.trim(); });
+    card.querySelector('#vBack2').addEventListener('click', step2);
+    card.querySelector('#vSubmit').addEventListener('click', function () {
+      if (pfHas('submitVerificationSteps')) {
+        PC.store.submitVerificationSteps({ liveness: true, id: true, social: social || '' });
+      }
+      close();
+      PC.ui.toast('Submitted for review (demo)');
+      PC.router.refresh();
+    });
+  }
+
+  step1();
+}
+
+/* EXT-POINT: real-verification — replace the simulated pfVerificationFlow()
+   call in the #pfVerify handler below with an ID/document review flow when a
+   backend exists. */
+
 PC.views.profileEdit = function (el, params) {
   var me = PC.store.me();
   var esc = PC.util.esc;
   var topics = (PC.store.topics() || []).map(function (t) {
     return { value: t.id, label: (t.icon ? t.icon + ' ' : '') + t.title };
   });
+
+  /* ---- Prompts section (build 2): pick 3 prompts from seed, answer each. ---- */
+  var seedPrompts = (window.PC && PC.seed && Array.isArray(PC.seed.prompts)) ? PC.seed.prompts : [];
+  var hasPrompts = seedPrompts.length > 0;
+  var savedPrompts = pfHas('myPrompts') ? (PC.store.myPrompts() || []) : [];
+  var selPrompts = [];
+  var promptAnswers = {};
+  savedPrompts.forEach(function (p) {
+    if (p && p.prompt && seedPrompts.indexOf(p.prompt) !== -1 && selPrompts.indexOf(p.prompt) === -1) {
+      selPrompts.push(p.prompt);
+      promptAnswers[p.prompt] = p.answer || '';
+    }
+  });
+
+  var promptsCard = '';
+  if (hasPrompts) {
+    promptsCard =
+      '<div class="card">' +
+        '<div class="section-title">💬 Profile prompts — pick 3</div>' +
+        '<p style="opacity:.75;">Choose up to 3 prompts and answer each one. They show on your profile.</p>' +
+        '<div id="pfPromptChips" style="display:flex;gap:8px;flex-wrap:wrap;">' +
+          seedPrompts.map(function (pr, i) {
+            var on = selPrompts.indexOf(pr) !== -1 ? ' chip-on' : '';
+            return '<button type="button" class="chip' + on + '" data-pidx="' + i + '">' + esc(pr) + '</button>';
+          }).join('') +
+        '</div>' +
+        '<div id="pfPromptAnswers" style="margin-top:12px;"></div>' +
+      '</div>';
+  }
+
+  function renderPromptAnswers() {
+    var box = el.querySelector('#pfPromptAnswers');
+    if (!box) return;
+    box.innerHTML = selPrompts.map(function (pr) {
+      return '<div class="field"><label class="label">' + esc(pr) + '</label>' +
+        '<textarea class="textarea" rows="2" data-answer-for="' + esc(pr) + '" placeholder="Your answer…">' +
+        esc(promptAnswers[pr] || '') + '</textarea></div>';
+    }).join('');
+  }
+
+  /* ---- Verification status chip ---- */
+  var ver = pfHas('myVerification') ? PC.store.myVerification() : null;
+  var verStatus = '';
+  if (ver && ver.status === 'pending') verStatus = ' <span class="chip">⏳ Under review (demo)</span>';
+  else if (ver && ver.status === 'approved') verStatus = ' <span class="badge badge-verified">✓ Verified</span>';
 
   el.innerHTML =
     '<div class="page-title">Edit profile</div>' +
@@ -181,6 +363,8 @@ PC.views.profileEdit = function (el, params) {
       pfChipGroup('f_values', 'Values', PF_VALUES, me.values) +
     '</div>' +
 
+    promptsCard +
+
     '<div class="card">' +
       '<div class="section-title">About you</div>' +
       pfTextField('f_goals', 'Goals', me.goals) +
@@ -197,8 +381,8 @@ PC.views.profileEdit = function (el, params) {
         (me.privacy && me.privacy.visibility) || 'everyone') +
       '<label class="toggle-row"><span>Hide my age</span><input type="checkbox" id="f_hideage"' + (me.privacy && me.privacy.hideAge ? ' checked' : '') + '></label>' +
       '<label class="toggle-row"><span>Only connections can message me</span><input type="checkbox" id="f_restrict"' + (me.privacy && me.privacy.restrictUnknown ? ' checked' : '') + '></label>' +
-      '<button class="btn btn-ghost" id="pfVerify">✓ Request verification</button>' +
-      ' <span style="opacity:.7;font-size:.9em;">Simulated in this demo.</span>' +
+      '<button class="btn btn-ghost" id="pfVerify">✓ Get verified</button>' + verStatus +
+      '<div style="opacity:.7;font-size:.85em;margin-top:6px;">3-step simulated check (liveness, ID, optional social link). No real documents are uploaded.</div>' +
     '</div>' +
 
     '<div style="display:flex;gap:8px;margin-bottom:24px;">' +
@@ -213,7 +397,35 @@ PC.views.profileEdit = function (el, params) {
     opt.textContent = visLabels[opt.value] || opt.value;
   });
 
-  /* Chip multi-select toggling */
+  /* Prompt chips: dedicated toggling with a max of 3 (container id does NOT
+     start with "f_" so the generic chip handler below ignores these). */
+  renderPromptAnswers();
+  if (hasPrompts) {
+    el.querySelector('#pfPromptChips').addEventListener('click', function (e) {
+      var c = e.target.closest ? e.target.closest('.chip') : null;
+      if (!c) return;
+      var pr = seedPrompts[parseInt(c.getAttribute('data-pidx'), 10)];
+      var ix = selPrompts.indexOf(pr);
+      if (ix !== -1) {
+        selPrompts.splice(ix, 1);
+        delete promptAnswers[pr];
+      } else {
+        if (selPrompts.length >= 3) { PC.ui.toast('Pick up to 3 prompts'); return; }
+        selPrompts.push(pr);
+      }
+      c.classList.toggle('chip-on');
+      renderPromptAnswers();
+    });
+    /* Keep typed answers across re-renders. */
+    el.addEventListener('input', function (e) {
+      var t = e.target;
+      if (t && t.hasAttribute && t.hasAttribute('data-answer-for')) {
+        promptAnswers[t.getAttribute('data-answer-for')] = t.value;
+      }
+    });
+  }
+
+  /* Chip multi-select toggling (standard f_ groups only). */
   el.addEventListener('click', function (e) {
     var c = e.target.closest ? e.target.closest('.chip') : null;
     if (c && c.parentElement && c.parentElement.id.indexOf('f_') === 0) c.classList.toggle('chip-on');
@@ -225,13 +437,7 @@ PC.views.profileEdit = function (el, params) {
     return vals;
   }
 
-  /* EXT-POINT: real-verification — replace the simulated requestVerification()
-     call in the #pfVerify handler below with an ID/document review flow when a
-     backend exists. */
-  el.querySelector('#pfVerify').addEventListener('click', function () {
-    PC.store.requestVerification();
-    PC.ui.toast('Verification request sent (simulated)');
-  });
+  el.querySelector('#pfVerify').addEventListener('click', pfVerificationFlow);
 
   el.querySelector('#pfCancel').addEventListener('click', function () { PC.router.go('/profile'); });
 
@@ -240,6 +446,17 @@ PC.views.profileEdit = function (el, params) {
     var age = parseInt(el.querySelector('#f_age').value, 10);
     if (!name) { PC.ui.toast('Please enter your name'); return; }
     if (!age || age < 18) { PC.ui.toast('You must be 18 or older to use PakConnect'); return; }
+    /* Prompts: exactly 3 selected with non-empty answers. */
+    if (hasPrompts) {
+      var promptList = selPrompts.map(function (pr) {
+        return { prompt: pr, answer: (promptAnswers[pr] || '').trim() };
+      });
+      if (promptList.length !== 3 || promptList.some(function (p) { return !p.answer; })) {
+        PC.ui.toast('Pick exactly 3 prompts and answer each one');
+        return;
+      }
+      if (pfHas('saveMyPrompts')) PC.store.saveMyPrompts(promptList);
+    }
     var mode = el.querySelector('#f_mode').value;
     PC.store.updateMe({
       name: name,
