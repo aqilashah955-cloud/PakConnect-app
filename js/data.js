@@ -10,6 +10,13 @@ PC.seed = {
   users: [
     {
       id: "u1", name: "Ayesha Khan", age: 26, gender: "F",
+      prompts: [
+        { prompt: "A tradition I love…", answer: "Eid mornings at my grandmother's house — sheer khurma and the chaos of kids collecting Eidi." },
+        { prompt: "Weekends look like…", answer: "A long hike in the morning, then chai and a good book in the evening." },
+        { prompt: "A cause I care about…", answer: "Getting every child in Pakistan excited about reading." }
+      ],
+      badges: ["discussion-starter"],
+      lastActive: Date.now() - 2 * 60e3,
       country: "Pakistan", city: "Lahore",
       background: "Born and raised in Lahore",
       education: "Master's in Education", profession: "School teacher",
@@ -28,6 +35,12 @@ PC.seed = {
     },
     {
       id: "u2", name: "Bilal Ahmed", age: 31, gender: "M",
+      prompts: [
+        { prompt: "My most controversial food opinion…", answer: "London biryani is a tragedy and we need to talk about it." },
+        { prompt: "A skill I want to learn…", answer: "Public speaking — I can code, but presenting still terrifies me." },
+        { prompt: "Ask me about…", answer: "Breaking into tech from Pakistan, or where to find decent nihari in London." }
+      ],
+      lastActive: Date.now() - 45 * 60e3,
       country: "UK", city: "London",
       background: "Moved to London for work, roots in Karachi",
       education: "BS Computer Science", profession: "Software engineer",
@@ -46,6 +59,7 @@ PC.seed = {
     },
     {
       id: "u3", name: "Fatima Noor", age: 24, gender: "F",
+      lastActive: Date.now() - 12 * 36e5,
       country: "USA", city: "Houston",
       background: "Second-generation Pakistani-American",
       education: "Medical student", profession: "Medical student",
@@ -64,6 +78,7 @@ PC.seed = {
     },
     {
       id: "u4", name: "Usman Tariq", age: 35, gender: "M",
+      lastActive: Date.now() - 2 * 36e5,
       country: "Canada", city: "Toronto",
       background: "Immigrated to Canada a decade ago, from Lahore",
       education: "MBA", profession: "Entrepreneur",
@@ -82,6 +97,7 @@ PC.seed = {
     },
     {
       id: "u5", name: "Zara Sheikh", age: 28, gender: "F",
+      lastActive: Date.now() - 3 * 60e3,
       country: "UAE", city: "Dubai",
       background: "Grew up in Islamabad, now living in Dubai",
       education: "BBA Marketing", profession: "Marketing manager",
@@ -100,6 +116,7 @@ PC.seed = {
     },
     {
       id: "u6", name: "Imran Malik", age: 42, gender: "M",
+      lastActive: Date.now() - 8 * 36e5,
       country: "Saudi Arabia", city: "Riyadh",
       background: "Working in the Gulf for 15 years, originally from Lahore",
       education: "BSc Civil Engineering", profession: "Civil engineer",
@@ -118,6 +135,7 @@ PC.seed = {
     },
     {
       id: "u7", name: "Hira Shah", age: 22, gender: "F",
+      lastActive: Date.now() - 90 * 60e3,
       country: "Australia", city: "Sydney",
       background: "Born in Pakistan, raised in Sydney",
       education: "Bachelor's in Design", profession: "Graphic designer",
@@ -136,6 +154,7 @@ PC.seed = {
     },
     {
       id: "u8", name: "Daniyal Raza", age: 29, gender: "M",
+      lastActive: Date.now() - 5 * 36e5,
       country: "UK", city: "Birmingham",
       background: "British-Pakistani, family from Gujranwala",
       education: "MSc Data Science", profession: "Data analyst",
@@ -154,6 +173,13 @@ PC.seed = {
     },
     {
       id: "u9", name: "Mahnoor Ali", age: 27, gender: "F",
+      prompts: [
+        { prompt: "I'm known for…", answer: "Asking the hard questions and then arguing about biryani." },
+        { prompt: "My favorite childhood memory…", answer: "Summer evenings on the rooftop, my mother telling stories under the stars." },
+        { prompt: "Something I'm proud of…", answer: "A story I reported that helped a school get rebuilt." }
+      ],
+      badges: ["discussion-starter"],
+      lastActive: Date.now() - 4 * 60e3,
       country: "Pakistan", city: "Karachi",
       background: "Born and raised in Karachi",
       education: "Master's in Journalism", profession: "Journalist",
@@ -172,6 +198,7 @@ PC.seed = {
     },
     {
       id: "u10", name: "Ahmed Farooq", age: 33, gender: "M",
+      lastActive: Date.now() - 24 * 36e5,
       country: "USA", city: "New York",
       background: "Moved to New York for finance, originally from Lahore",
       education: "MBA Finance", profession: "Finance professional",
@@ -200,6 +227,12 @@ PC.seed = {
     },
     {
       id: "u11", name: "Sana Iqbal", age: 30, gender: "F",
+      prompts: [
+        { prompt: "My idea of a perfect day…", answer: "A morning hike, daal simmering on the stove, and a call with my mother while it cooks." },
+        { prompt: "Three things I can't live without…", answer: "My hiking boots, my mother's recipes, and a good book." },
+        { prompt: "I'm happiest when…", answer: "I'm on a trail with no signal and nowhere to be." }
+      ],
+      lastActive: Date.now() - 3 * 36e5,
       country: "Canada", city: "Vancouver",
       background: "Immigrated to Canada as a teen, originally from Islamabad",
       education: "MD", profession: "Doctor",
@@ -228,6 +261,7 @@ PC.seed = {
     },
     {
       id: "u12", name: "Kamran Hussain", age: 38, gender: "M",
+      lastActive: Date.now() - 72 * 36e5,
       country: "Europe", city: "Berlin",
       background: "Living in Berlin for work",
       education: "BBA", profession: "Business consultant",
@@ -479,5 +513,204 @@ PC.seed = {
     "Advanced filters",
     "Video calls (coming)",
     "Events access"
+  ],
+
+  /* ------------------------------ stories ------------------------------ */
+  /* EXT-POINT: stories-api — replace this static pack with a backend feed
+     (stories expire after 24h; the store prunes them on init). */
+  stories: [
+    { id: "s1", authorId: "u1", text: "Eid Mubarak from Lahore! 🌙", bg: 0, emoji: "🌙", ts: Date.now() - 1 * 36e5 },
+    { id: "s2", authorId: "u9", text: "Biryani night — Karachi vs Lahore round 2 🍛", bg: 1, emoji: "🍛", ts: Date.now() - 3 * 36e5 },
+    { id: "s3", authorId: "u2", text: "New job! Alhamdulillah 🎉", bg: 2, emoji: "🎉", ts: Date.now() - 6 * 36e5 },
+    { id: "s4", authorId: "u5", text: "Sunset over the Marina — Dubai evenings hit different 🌅", bg: 3, emoji: "🌅", ts: Date.now() - 9 * 36e5 },
+    { id: "s5", authorId: "u7", text: "Finished my first illustration series! 🎨", bg: 4, emoji: "🎨", ts: Date.now() - 13 * 36e5 },
+    { id: "s6", authorId: "u11", text: "Trail day in the mountains — clear your head, fill your heart 🏔️", bg: 5, emoji: "🏔️", ts: Date.now() - 16 * 36e5 },
+    { id: "s7", authorId: "u4", text: "Chai o'clock with the team ☕", bg: 0, emoji: "☕", ts: Date.now() - 20 * 36e5 }
+  ],
+
+  /* ---------------------------- mehfil rooms ---------------------------- */
+  /* EXT-POINT: mehfil-api — live rooms would come from a realtime backend. */
+  mehfilRooms: [
+    {
+      id: "m1", topicId: "career", title: "Chai & Career Stories ☕",
+      hostId: "u2", hostName: "Bilal Ahmed",
+      desc: "Diaspora professionals share career pivots, wins, and lessons over a virtual chai.",
+      live: true, startsAt: Date.now() - 30 * 60e3, listeners: 48,
+      speakers: ["u2", "u4", "u10"], raisedHands: ["u5"]
+    },
+    {
+      id: "m2", topicId: "food", title: "Biryani Debate: The Live Edition 🍛",
+      hostId: "u9", hostName: "Mahnoor Ali",
+      desc: "Karachi, Lahore, Hyderabad — the age-old debate, settled live (or not).",
+      live: true, startsAt: Date.now() - 30 * 60e3, listeners: 112,
+      speakers: ["u9", "u1"], raisedHands: ["u7", "u8"]
+    },
+    {
+      id: "m3", topicId: "family", title: "Diaspora Parenting Circle",
+      hostId: "u11", hostName: "Sana Iqbal",
+      desc: "Raising kids between two cultures — share stories and strategies.",
+      live: false, startsAt: Date.now() + 2 * 36e5, listeners: 0,
+      speakers: ["u11"], raisedHands: []
+    },
+    {
+      id: "m4", topicId: "career", title: "Startup Q&A with Founders",
+      hostId: "u4", hostName: "Usman Tariq",
+      desc: "Ask founders anything: fundraising, hiring, and building from Pakistan to the world.",
+      live: false, startsAt: Date.now() + 24 * 36e5, listeners: 0,
+      speakers: ["u4", "u2"], raisedHands: []
+    },
+    {
+      id: "m5", topicId: "pakistani-culture", title: "Urdu Poetry Night",
+      hostId: "u1", hostName: "Ayesha Khan",
+      desc: "An evening of Urdu poetry — bring your favorite verse or just listen.",
+      live: false, startsAt: Date.now() + 48 * 36e5, listeners: 0,
+      speakers: ["u1", "u3"], raisedHands: []
+    }
+  ],
+
+  /* ------------------------------- events ------------------------------- */
+  /* EXT-POINT: events-api — replace with a backend event listing. */
+  events: [
+    {
+      id: "e1", title: "Eid Milan — London", city: "London", country: "UK",
+      date: Date.now() + 5 * 864e5,
+      desc: "Celebrate Eid with the London Pakistani community — food, music, and new friends.",
+      hostId: "u2", attendees: ["u2", "u8"], interested: ["u5"]
+    },
+    {
+      id: "e2", title: "Chai & Careers — Toronto", city: "Toronto", country: "Canada",
+      date: Date.now() + 9 * 864e5,
+      desc: "A casual networking evening for Pakistani professionals in Toronto.",
+      hostId: "u4", attendees: ["u4"], interested: ["u11"]
+    },
+    {
+      id: "e3", title: "Pakistan Food Festival — Houston", city: "Houston", country: "USA",
+      date: Date.now() + 12 * 864e5,
+      desc: "A day of desi food stalls, live cooking, and family fun.",
+      hostId: "u3", attendees: ["u3", "u10"], interested: ["u9"]
+    },
+    {
+      id: "e4", title: "Desi Professionals Mixer — Dubai", city: "Dubai", country: "UAE",
+      date: Date.now() + 16 * 864e5,
+      desc: "Meet Pakistani professionals across industries in Dubai.",
+      hostId: "u5", attendees: ["u5"], interested: ["u2", "u6"]
+    },
+    {
+      id: "e5", title: "Book Club: Urdu Literature — Sydney", city: "Sydney", country: "Australia",
+      date: Date.now() + 21 * 864e5,
+      desc: "This month: Intizar Hussain. All readers welcome, Urdu or English.",
+      hostId: "u7", attendees: ["u7", "u3"], interested: ["u1"]
+    },
+    {
+      id: "e6", title: "Community Iftar Planning — Lahore", city: "Lahore", country: "Pakistan",
+      date: Date.now() + 30 * 864e5,
+      desc: "Planning meetup for a community iftar — volunteers and ideas welcome.",
+      hostId: "u1", attendees: ["u1"], interested: ["u9", "u6"]
+    }
+  ],
+
+  /* -------------------------------- polls -------------------------------- */
+  /* EXT-POINT: polls-api — poll votes would be tallied server-side. */
+  polls: [
+    {
+      id: "p1", topicId: "food", title: "Best biryani city?",
+      options: [
+        { id: "p1o1", text: "Karachi", votes: ["u1", "u9"] },
+        { id: "p1o2", text: "Lahore", votes: ["u2"] },
+        { id: "p1o3", text: "Hyderabad", votes: [] }
+      ],
+      authorId: "u9", ts: Date.now() - 5 * 36e5
+    },
+    {
+      id: "p2", topicId: "career", title: "Best way to grow your career in 2026?",
+      options: [
+        { id: "p2o1", text: "Remote work for global clients", votes: ["u2", "u10"] },
+        { id: "p2o2", text: "Build your own startup", votes: ["u4"] },
+        { id: "p2o3", text: "Climb the corporate ladder", votes: [] }
+      ],
+      authorId: "u4", ts: Date.now() - 8 * 36e5
+    }
+  ],
+
+  /* --------------------------- profile prompts --------------------------- */
+  prompts: [
+    "My most controversial food opinion…",
+    "A tradition I love…",
+    "Weekends look like…",
+    "I'm happiest when…",
+    "A skill I want to learn…",
+    "My favorite childhood memory…",
+    "Three things I can't live without…",
+    "Ask me about…",
+    "I'm known for…",
+    "A cause I care about…",
+    "My idea of a perfect day…",
+    "Something I'm proud of…"
+  ],
+
+  /* ------------------------------- badges -------------------------------- */
+  badgeDefs: [
+    { id: "discussion-starter", icon: "💬", title: "Discussion Starter", desc: "Posted 5+ discussion replies" },
+    { id: "mehfil-regular", icon: "🎙️", title: "Mehfil Regular", desc: "Joined 3+ Mehfil rooms" },
+    { id: "community-helper", icon: "🤝", title: "Community Helper", desc: "Sent 10+ group chat messages" },
+    { id: "conversation-starter", icon: "✉️", title: "Conversation Starter", desc: "Sent 10+ private messages" }
+  ],
+
+  /* ----------------------------- group chats ----------------------------- */
+  /* EXT-POINT: groupchat-api — replace with a realtime group backend. */
+  groupChatSeed: {
+    "Pakistan": [
+      { authorId: "u1", text: "Anyone in Lahore up for a book club meetup? 📚", hoursAgo: 1 },
+      { authorId: "u9", text: "Karachi folks — chai meetup this weekend? ☕", hoursAgo: 4 },
+      { authorId: "u1", text: "Lahore book club poll is up in Discussions — vote for the book!", hoursAgo: 9 }
+    ],
+    "UK": [
+      { authorId: "u2", text: "Anyone tried the new Pakistani restaurant in Tooting? 🍛", hoursAgo: 2 },
+      { authorId: "u8", text: "Birmingham crew — cricket screening this Sunday 🏏", hoursAgo: 7 }
+    ],
+    "USA": [
+      { authorId: "u3", text: "Houston — food festival volunteers needed! 🙋", hoursAgo: 3 },
+      { authorId: "u10", text: "New York desis, chai meetup next week? ☕", hoursAgo: 11 }
+    ],
+    "Canada": [
+      { authorId: "u4", text: "Toronto networking night was a hit — planning the next one 🇨🇦", hoursAgo: 5 },
+      { authorId: "u11", text: "Vancouver hiking group, who's in? 🥾", hoursAgo: 8 }
+    ],
+    "UAE": [
+      { authorId: "u5", text: "Dubai folks — community iftar planning starts soon 🌙", hoursAgo: 2 },
+      { authorId: "u5", text: "Any photographers in Dubai? Would love to collab 📸", hoursAgo: 10 }
+    ],
+    "Saudi Arabia": [
+      { authorId: "u6", text: "Riyadh meetup for engineers — coffee and career chat ☕", hoursAgo: 6 },
+      { authorId: "u6", text: "Happy to mentor anyone starting out in civil engineering", hoursAgo: 14 }
+    ],
+    "Australia": [
+      { authorId: "u7", text: "Sydney Urdu book club is on this Saturday 📖", hoursAgo: 4 },
+      { authorId: "u7", text: "Sketching at the Opera House this weekend if anyone wants to join 🎨", hoursAgo: 12 }
+    ],
+    "Europe": [
+      { authorId: "u2", text: "Visiting Berlin next month — any recommendations? ✈️", hoursAgo: 5 },
+      { authorId: "u5", text: "Dubai to Berlin trip soon, would love to meet European members 🤝", hoursAgo: 13 }
+    ],
+    "Worldwide": [
+      { authorId: "u1", text: "Welcome everyone! Introduce yourselves here 👋", hoursAgo: 1 },
+      { authorId: "u3", text: "Greetings from Houston! 🌎", hoursAgo: 3 },
+      { authorId: "u11", text: "Hello from Vancouver — happy to be here 💛", hoursAgo: 6 }
+    ]
+  },
+
+  /* ----------------------------- premium tiers ---------------------------- */
+  premiumTiers: [
+    { id: "free", name: "Free", price: "PKR 0" },
+    {
+      id: "premium", name: "Premium", price: "PKR 499/mo",
+      perks: [
+        "Profile Boost — appear at the top of Discover",
+        "Super Connect — bypass the daily Connect limit",
+        "Incognito mode — browse without appearing",
+        "Unlimited Interested",
+        "Verified badge priority review"
+      ]
+    }
   ]
 };
