@@ -1,8 +1,10 @@
 window.PC = window.PC || {};
-/* PakConnect — communities view: country-based community cards. */
+/* PakConnect — communities view: tabbed (Members | Group chats | Events).
+   Members tab keeps the original country-card grid + explore-members behavior.
+   Group chats tab renders PC.views.groupchatListHTML() (owned by another build-2
+   agent — guarded). Events tab teases /events with the next 3 events mini-list. */
 
 /* EXT-POINT: community-groups — interest-based groups inside each country community. */
-/* EXT-POINT: community-events — virtual/in-person meetups per community with RSVPs. */
 /* EXT-POINT: community-moderators — elected moderators per country community. */
 /* EXT-POINT: community-rules — per-community guidelines layered on global safety rules. */
 
@@ -12,10 +14,13 @@ window.PC = window.PC || {};
 
   var STARS = ['★', '✦', '✧', '✶', '✷', '✸', '✹', '✺', '✻'];
 
-  PC.views.communities = function (el, params) {
-    var wrap = document.createElement('div');
-    wrap.innerHTML =
-      '<div class="page-title">Communities</div>' +
+  var cmTab = 'members'; /* 'members' | 'gchat' | 'events' */
+
+  function has(fn) { return !!(S && typeof S[fn] === 'function'); }
+
+  function membersHTML(host) {
+    var intro = document.createElement('div');
+    intro.innerHTML =
       '<p style="color:var(--muted,#666);margin-top:0">Find your people. Each community gathers Pakistanis living in the same country — swap stories, plan meetups, and help each other settle in.</p>' +
       '<p style="color:var(--muted,#666);font-size:.85em">Member counts shown are demo counts.</p>';
 
@@ -50,7 +55,88 @@ window.PC = window.PC || {};
       });
       grid.appendChild(card);
     });
-    wrap.appendChild(grid);
+    host.appendChild(intro);
+    host.appendChild(grid);
+  }
+
+  function gchatHTML(host) {
+    var head = document.createElement('div');
+    head.innerHTML =
+      '<div class="section-title">💬 Country group chats</div>' +
+      '<p style="color:var(--muted,#666);margin-top:0">Jump into the conversation for your country — or lurk in another community\'s chat to see what they\'re talking about.</p>' +
+      '<p style="color:var(--muted,#666);font-size:.85em">Member counts shown are demo counts.</p>';
+    host.appendChild(head);
+    var body = document.createElement('div');
+    if (PC.views && typeof PC.views.groupchatListHTML === 'function') {
+      body.innerHTML = PC.views.groupchatListHTML();
+      /* Let the groupchat module wire its own buttons if it exposes a hook. */
+      if (typeof PC.views.wireGroupchatList === 'function') PC.views.wireGroupchatList(body);
+    } else {
+      body.innerHTML = '<div class="empty"><span class="big">💬</span>Group chats are landing in build 2 — check back soon.</div>';
+    }
+    host.appendChild(body);
+  }
+
+  function eventsHTML(host) {
+    var head = document.createElement('div');
+    head.innerHTML =
+      '<div class="section-title">📅 Upcoming community events</div>' +
+      '<p style="color:var(--muted,#666);margin-top:0">Meetups, hangouts and virtual gatherings organised by community members.</p>';
+    host.appendChild(head);
+
+    var list = has('eventsList') ? (S.eventsList() || []) : [];
+    var teaser = document.createElement('div');
+    teaser.className = 'card';
+    var rows = list.slice(0, 3).map(function (ev) {
+      var name = ev.name || ev.title || 'Community event';
+      var when = ev.date || (ev.ts ? U.timeAgo(ev.ts) : '') || '';
+      var rsvps = ev.rsvps ? ev.rsvps.length : (ev.rsvpCount || 0);
+      return '<div class="list-row">' +
+        '<span class="event-date">' + U.esc(String(when).slice(0, 10) || '—') + '</span>' +
+        '<span style="flex:1;"><b>' + U.esc(name) + '</b><br>' +
+        '<span style="opacity:.7;font-size:.85em;">' + U.esc(String(when)) + ' · ' + rsvps + ' going</span></span>' +
+      '</div>';
+    }).join('');
+    teaser.innerHTML =
+      (rows || '<p style="opacity:.7;">No events yet — be the first to plan one.</p>') +
+      '<button class="btn btn-primary" data-events style="margin-top:8px;">Browse all events</button>' +
+      '<p style="color:var(--muted,#666);font-size:.85em;margin-bottom:0;">Event details are demo content.</p>';
+    teaser.querySelector('[data-events]').addEventListener('click', function () { PC.router.go('/events'); });
+    host.appendChild(teaser);
+  }
+
+  PC.views.communities = function (el, params) {
+    var tabs = [
+      ['members', 'Members'],
+      ['gchat', '💬 Group chats'],
+      ['events', '📅 Events']
+    ];
+    var wrap = document.createElement('div');
+    wrap.innerHTML =
+      '<div class="page-title">Communities</div>' +
+      '<div class="tabs">' + tabs.map(function (t) {
+        return '<button class="tab' + (cmTab === t[0] ? ' tab-on' : '') + '" data-cmtab="' + t[0] + '">' + t[1] + '</button>';
+      }).join('') + '</div>' +
+      '<div id="cmContent"></div>';
     el.appendChild(wrap);
+    var content = wrap.querySelector('#cmContent');
+
+    function renderTab() {
+      content.innerHTML = '';
+      if (cmTab === 'gchat') gchatHTML(content);
+      else if (cmTab === 'events') eventsHTML(content);
+      else membersHTML(content);
+    }
+    renderTab();
+
+    wrap.querySelectorAll('[data-cmtab]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        cmTab = b.getAttribute('data-cmtab');
+        wrap.querySelectorAll('[data-cmtab]').forEach(function (x) {
+          x.classList.toggle('tab-on', x.getAttribute('data-cmtab') === cmTab);
+        });
+        renderTab();
+      });
+    });
   };
 })();

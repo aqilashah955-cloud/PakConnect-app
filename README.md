@@ -41,11 +41,46 @@ js/views/marriage.js     Optional Marriage Mode prefs + consent-gated family inv
 js/views/safety.js       Guidelines, scam warnings, block/report help, verification request
 js/views/admin.js        Demo moderation: users, reports, verification queue, suspicious
                     accounts, discussion moderation, analytics
+js/views/stories.js      Stories (build 2): story tray + full-screen viewer
+js/views/groupchat.js    Community group chats (build 2): per-country rooms
+js/views/mehfil.js       Mehfil live audio rooms (build 2): rooms list + room view
+js/views/events.js       Community events (build 2): list + RSVP
+js/views/premium.js      Premium (build 2): profile premium card + demo checkout page
 ```
 
 Hash routes: `#/` `#/onboarding` `#/discover` `#/discussions` `#/discussions/:topic`
 `#/dthread/:id` `#/connections` `#/messages` `#/chat/:id` `#/communities`
-`#/profile` `#/profile/edit` `#/marriage` `#/safety` `#/admin`.
+`#/profile` `#/profile/edit` `#/marriage` `#/safety` `#/admin`
+`#/stories/:id` `#/mehfil` `#/mehfil/:id` `#/events` `#/gchat/:country` `#/premium`.
+
+## Build 2 features
+
+- **Stories:** story tray on Discover + full-screen story viewer (`#/stories/:id`).
+- **Voice notes:** record/play in chat (`views.messages/.chat`) with a pulsing rec UI.
+- **Mehfil live audio rooms:** rooms list (`#/mehfil`) + room view (`#/mehfil/:id`)
+  with a pulsing live indicator.
+- **Events:** community events with RSVP counts (`#/events`); Communities tab shows
+  the next 3 events as a teaser.
+- **Polls:** poll bars with animated fills (used in verification ID-check sim and polls).
+- **Profile prompts:** pick 3 from 12 seed prompts + answer each in Profile → Edit;
+  shown as Q&A cards on your profile. Validation: exactly 3, all answered.
+- **Badges + streaks:** earned-badge showcase (earned highlighted, rest grayed)
+  and a 🔥 login-streak chip on the profile, both driven by the store.
+- **Verification (3-step, simulated):** press-and-hold liveness → ID check with
+  fake progress → optional social-profile link. Submits `{liveness, id, social}`
+  for admin review; admin queue shows each step and approve grants the badge.
+- **Communities tabs:** Members (original country cards) · 💬 Group chats
+  (per-country rooms, `#/gchat/:country`) · 📅 Events teaser.
+
+### How the Premium demo works
+
+- **Free:** 10 Connects/day, 20 Interested/day. **Premium: PKR 499/month**, unlimited.
+- Profile → **Subscribe (demo checkout)** opens `#/premium`, which shows a
+  "🧪 Demo checkout — no real payment is processed" banner. **Pay PKR 499** simply
+  flips your demo tier (`S.setPremium('premium')`) in localStorage — nothing real
+  happens, and "Reset demo data" restores Free.
+- With Premium active the profile card shows toggles for **🚀 Profile Boost** and
+  **🕵️ Incognito**, persisted via the store. **Cancel Premium** flips back to Free.
 
 ## Key behaviours
 
@@ -65,9 +100,10 @@ Hash routes: `#/` `#/onboarding` `#/discover` `#/discussions` `#/discussions/:to
 
 ## Extension points (commented `EXT-POINT` in code)
 
-`premium-subscriptions` · `verified-profiles` · `events` · `community-groups` ·
+`premium-subscriptions` · `verified-profiles` · `community-groups` ·
 `video-calls` · `backend-sync` / `backend-auth` · photo uploads · moderation AI.
-The Premium upsell card is present but non-functional and clearly labeled "coming soon".
+Premium ships with a demo checkout (no real payment); the real-billing hook is
+marked in `js/views/premium.js`.
 
 ## Verification
 

@@ -23,7 +23,16 @@ window.PC = window.PC || {};
     { pattern: /^\/profile\/edit$/, view: 'profileEdit' },
     { pattern: /^\/marriage$/, view: 'marriage' },
     { pattern: /^\/safety$/, view: 'safety' },
-    { pattern: /^\/admin$/, view: 'admin' }
+    { pattern: /^\/admin$/, view: 'admin' },
+    { pattern: /^\/stories\/([^\/]+)$/, view: 'stories',
+      params: function (m) { return { id: decodeURIComponent(m[1]) }; } },
+    { pattern: /^\/mehfil$/, view: 'mehfil' },
+    { pattern: /^\/mehfil\/([^\/]+)$/, view: 'mehfilRoom',
+      params: function (m) { return { id: decodeURIComponent(m[1]) }; } },
+    { pattern: /^\/events$/, view: 'events' },
+    { pattern: /^\/gchat\/(.+)$/, view: 'gchat',
+      params: function (m) { return { country: decodeURIComponent(m[1]) }; } },
+    { pattern: /^\/premium$/, view: 'premium' }
   ];
 
   var CHROMELESS = { landing: true, onboarding: true };
@@ -35,7 +44,11 @@ window.PC = window.PC || {};
     connections: 'connections',
     messages: 'messages', chat: 'messages',
     communities: 'communities',
-    profile: 'profile', profileEdit: 'profile'
+    profile: 'profile', profileEdit: 'profile',
+    stories: 'discover',
+    mehfil: 'discussions', mehfilRoom: 'discussions',
+    events: 'communities', gchat: 'communities',
+    premium: 'profile'
     // marriage / safety / admin have no bottom-nav item
   };
 
