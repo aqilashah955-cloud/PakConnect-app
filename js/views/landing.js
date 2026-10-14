@@ -123,7 +123,6 @@ PC.views.landing = function(el, params){
 
   /* ---------- Stats band ---------- */
   var statsHtml = '<section class="lp-stats">' +
-      '<span class="badge badge-demo">demo</span>' +
       '<div class="stat-card"><strong>9</strong><span>regions across the globe</span></div>' +
       '<div class="stat-card"><strong>15</strong><span>discussion topics</span></div>' +
       '<div class="stat-card"><strong>5</strong><span>modes, zero pressure</span></div>' +
