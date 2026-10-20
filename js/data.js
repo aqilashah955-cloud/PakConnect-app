@@ -1,4 +1,4 @@
-/* PakConnect seed data — static demo profiles, topics, discussions, and content.
+/* PakConnect seed data — static sample profiles, topics, discussions, and content.
    Plain script (no modules) so the app runs from file:// with zero network. */
 window.PC = window.PC || {};
 

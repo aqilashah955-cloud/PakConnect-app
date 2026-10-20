@@ -253,7 +253,7 @@ window.PC = window.PC || {};
   function replyPool() {
     var s = (window.PC && window.PC.seed) || {};
     if (Array.isArray(s.replyIdeas) && s.replyIdeas.length) return s.replyIdeas;
-    // Canned, friendly, and personal-detail-free (demo auto-reply).
+    // Canned, friendly, and personal-detail-free (sample auto-reply).
     return [
       'Thanks for reaching out! How is your day going?',
       'Nice to meet you here! What brought you to PakConnect?',
@@ -274,7 +274,7 @@ window.PC = window.PC || {};
     t.lastTs = msg.ts;
     awardActivity('message');
     save();
-    // One canned friendly auto-reply per thread (demo), only if the thread still exists.
+    // One canned friendly auto-reply per thread (sample), only if the thread still exists.
     queueAutoReply(threadId);
     return msg;
   }
@@ -740,7 +740,7 @@ window.PC = window.PC || {};
 
   /* ---------- voice notes & message helpers ---------- */
   function queueAutoReply(threadId) {
-    // Extracted from sendMessage: one canned friendly reply per thread (demo).
+    // Extracted from sendMessage: one canned friendly reply per thread (sample).
     if (state.autoReplied[threadId]) return;
     state.autoReplied[threadId] = true;
     save();
