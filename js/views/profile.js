@@ -34,7 +34,7 @@ PC.views.profile = function (el, params) {
   var badges = '';
   if (me.verified || (ver && ver.status === 'approved')) badges += ' <span class="badge badge-verified">✓ Verified</span>';
   if (ver && ver.status === 'pending') badges += ' <span class="chip">⏳ Verification pending</span>';
-  if (me.demo) badges += ' <span class="badge badge-demo">demo</span>';
+  if (me.demo) badges += ' <span class="badge badge-demo">sample</span>';
 
   var bits = [];
   if (me.age && !(me.privacy && me.privacy.hideAge)) bits.push(esc(String(me.age)));
@@ -120,7 +120,7 @@ PC.views.profile = function (el, params) {
       '<div class="menu-row" data-go="/safety"><span>🛡️ Safety &amp; privacy</span><span>›</span></div>' +
       '<div class="menu-row" data-go="/admin"><span>🛠️ Admin dashboard</span><span>›</span></div>' +
       '<label class="toggle-row"><span>🌙 Dark mode</span><input type="checkbox" id="pfTheme"' + (theme === 'dark' ? ' checked' : '') + '></label>' +
-      '<div class="menu-row" id="pfReset"><span>🗑️ Reset demo data</span><span>›</span></div>' +
+      '<div class="menu-row" id="pfReset"><span>🗑️ Reset sample data</span><span>›</span></div>' +
     '</div>' +
 
     premHTML;
@@ -137,10 +137,10 @@ PC.views.profile = function (el, params) {
   });
 
   el.querySelector('#pfReset').addEventListener('click', function () {
-    PC.ui.confirmDlg('Reset all demo data? Your profile and all demo content will be recreated from scratch.').then(function (ok) {
+    PC.ui.confirmDlg('Reset all sample data? Your profile and all sample content will be recreated from scratch.').then(function (ok) {
       if (!ok) return;
       PC.store.reset();
-      PC.ui.toast('Demo data reset');
+      PC.ui.toast('Sample data reset');
       PC.router.go('/');
     });
   });
@@ -186,7 +186,7 @@ function pfChipGroup(id, label, opts, selected) {
   return '<div class="field"><div class="label">' + PC.util.esc(label) + '</div><div id="' + id + '">' + chips + '</div></div>';
 }
 
-/* ---- 3-step verification flow (simulated demo): liveness hold → ID check →
+/* ---- 3-step verification flow (simulated sample): liveness hold → ID check →
        optional social link. No phone/CNIC/address/password fields anywhere. */
 function pfVerificationFlow() {
   var esc = PC.util.esc;
@@ -199,7 +199,7 @@ function pfVerificationFlow() {
     card.innerHTML =
       '<div class="section-title">Step 1 of 3 — Liveness (simulated)</div>' +
       '<p>Press and <b>hold</b> the button for 2 seconds to confirm you\'re a real person. ' +
-      'Demo only — no camera is used.</p>' +
+      'Sample only — no camera is used.</p>' +
       '<button type="button" class="btn btn-primary" id="vHold" style="position:relative;overflow:hidden;width:100%;">' +
         '<span id="vHoldFill" style="position:absolute;left:0;top:0;bottom:0;width:0;background:rgba(255,255,255,.35);"></span>' +
         '<span style="position:relative;">Hold me</span></button>' +
@@ -230,9 +230,9 @@ function pfVerificationFlow() {
   function step2() {
     card.innerHTML =
       '<div class="section-title">Step 2 of 3 — ID check (simulated)</div>' +
-      '<p>In the live app you\'d photograph an ID document here. This demo skips real ' +
+      '<p>In the live app you\'d photograph an ID document here. This sample skips real ' +
       'documents entirely — <b>nothing is uploaded</b>.</p>' +
-      '<button type="button" class="btn btn-primary" id="vIdBtn">Verify ID (demo)</button>' +
+      '<button type="button" class="btn btn-primary" id="vIdBtn">Verify ID (sample)</button>' +
       '<div class="poll-bar" id="vIdBar" style="display:none;margin-top:12px;"><div class="poll-fill" id="vIdFill"></div></div>' +
       '<div style="text-align:right;margin-top:12px;">' +
         '<button type="button" class="btn btn-ghost" id="vBack1">Back</button> ' +
@@ -270,7 +270,7 @@ function pfVerificationFlow() {
         PC.store.submitVerificationSteps({ liveness: true, id: true, social: social || '' });
       }
       close();
-      PC.ui.toast('Submitted for review (demo)');
+      PC.ui.toast('Submitted for review (sample)');
       PC.router.refresh();
     });
   }
@@ -331,7 +331,7 @@ PC.views.profileEdit = function (el, params) {
   /* ---- Verification status chip ---- */
   var ver = pfHas('myVerification') ? PC.store.myVerification() : null;
   var verStatus = '';
-  if (ver && ver.status === 'pending') verStatus = ' <span class="chip">⏳ Under review (demo)</span>';
+  if (ver && ver.status === 'pending') verStatus = ' <span class="chip">⏳ Under review (sample)</span>';
   else if (ver && ver.status === 'approved') verStatus = ' <span class="badge badge-verified">✓ Verified</span>';
 
   el.innerHTML =

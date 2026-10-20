@@ -80,7 +80,7 @@ PC.views.marriage = function (el, params) {
       text('fi_relation', 'Relationship (e.g. Mother, Uncle)', '') +
       '<label class="toggle-row"><span>I have this person’s consent to invite them</span><input type="checkbox" id="fi_consent"></label>' +
       '<button class="btn" id="mgInvite">Send invitation</button>' +
-      '<p style="opacity:.7;font-size:.9em;margin-top:8px;">Note: invitations are simulated in this demo — no real message is sent.</p>' +
+      '<p style="opacity:.7;font-size:.9em;margin-top:8px;">Note: invitations are simulated in this sample — no real message is sent.</p>' +
     '</div>';
 
   el.innerHTML = html;

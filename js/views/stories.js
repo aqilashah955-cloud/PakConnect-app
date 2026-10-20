@@ -127,7 +127,7 @@ PC.views = PC.views || {};
     }).join('');
 
     var body =
-      '<div class="section-title">✨ New story <span class="badge badge-demo">demo</span></div>' +
+      '<div class="section-title">✨ New story <span class="badge badge-demo">sample</span></div>' +
       '<p style="color:var(--muted,#666);font-size:.85em;margin-top:0">Stories disappear after 24 hours.</p>' +
       '<div class="field"><label class="label" for="storyText">Your story</label>' +
         '<textarea class="textarea" id="storyText" rows="3" maxlength="140" ' +

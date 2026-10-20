@@ -90,7 +90,7 @@ PC.views = PC.views || {};
 
     var note = document.createElement('div');
     note.style.cssText = 'font-size:.85em;color:var(--muted,#666);margin:8px 0';
-    note.textContent = 'Demo group chat — be kind, no personal contact info.';
+    note.textContent = 'Sample group chat — be kind, no personal contact info.';
     wrap.appendChild(note);
 
     var msgs = document.createElement('div');

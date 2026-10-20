@@ -2,16 +2,16 @@ window.PC = window.PC || {};
 PC.views = PC.views || {};
 
 /* PakConnect — Premium (build 2). Demo-only checkout: no real payment is ever
-   processed. Premium state lives in localStorage and resets with "Reset demo data".
+   processed. Premium state lives in localStorage and resets with "Reset sample data".
    Store API (guarded — another build-2 agent owns the store):
      S.premiumTier() -> 'free'|'premium', S.setPremium(tier), S.isPremium(),
      S.isBoost(), S.setBoost(b), S.isIncognito(), S.setIncognito(b)
    Seed: PC.seed.premiumTiers (array of perk strings or {title} objects). */
 
-/* EXT-POINT: real-checkout — replace the demo Pay/Cancel handlers in
+/* EXT-POINT: real-checkout — replace the sample Pay/Cancel handlers in
    PC.views.premium with a real payment provider (Paddle/Lemon Squeezy) when a
    backend exists. Entitlements (Connects/day, Interested/day) are enforced
-   against S.premiumTier() in the store; this file only flips the demo tier. */
+   against S.premiumTier() in the store; this file only flips the sample tier. */
 
 (function () {
   'use strict';
@@ -68,18 +68,18 @@ PC.views = PC.views || {};
           perks.map(function (p) { return '<li>' + esc(p) + '</li>'; }).join('') +
           '</ul></div>' +
       '</div>' +
-      '<button class="btn btn-primary" data-pc-premium="subscribe">Subscribe (demo checkout)</button>' +
+      '<button class="btn btn-primary" data-pc-premium="subscribe">Subscribe (sample checkout)</button>' +
     '</div>';
   };
 
-  /* Demo checkout page. */
+  /* Sample checkout page. */
   PC.views.premium = function (el, params) {
     var perks = perkStrings();
     var active = isPremium();
     el.innerHTML =
       '<div class="page-title">✨ Premium</div>' +
-      '<div class="banner-warn" style="margin-bottom:14px;">🧪 <b>Demo checkout</b> — no real payment is processed. ' +
-      'Tapping Pay simply flips your demo tier in local storage.</div>' +
+      '<div class="banner-warn" style="margin-bottom:14px;">🧪 <b>Sample checkout</b> — no real payment is processed. ' +
+      'Tapping Pay simply flips your sample tier in local storage.</div>' +
       '<div class="card">' +
         '<div class="section-title">PakConnect Premium — PKR 499/month</div>' +
         '<ul>' + perks.map(function (p) { return '<li>' + esc(p) + '</li>'; }).join('') + '</ul>' +
@@ -102,13 +102,13 @@ PC.views = PC.views || {};
     if (action === 'back') { PC.router.go('/profile'); return; }
     if (action === 'pay') {
       if (typeof s.setPremium === 'function') s.setPremium('premium');
-      say('Welcome to Premium (demo)');
+      say('Welcome to Premium (sample)');
       PC.router.go('/profile');
       return;
     }
     if (action === 'cancel') {
       if (typeof s.setPremium === 'function') s.setPremium('free');
-      say('Premium cancelled — back to Free (demo)');
+      say('Premium cancelled — back to Free (sample)');
       PC.router.refresh();
     }
   }

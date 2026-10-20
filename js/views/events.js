@@ -121,7 +121,7 @@ PC.views = PC.views || {};
         '<div class="page-title" style="margin:0">📅 Community events</div>' +
         '<button class="btn btn-primary btn-sm" data-create>＋ Create event</button>' +
       '</div>' +
-      '<p style="color:var(--muted,#666);margin:8px 0">Meetups, talks, and hangouts hosted by the community. <span class="badge badge-demo">demo</span></p>' +
+      '<p style="color:var(--muted,#666);margin:8px 0">Meetups, talks, and hangouts hosted by the community. <span class="badge badge-demo">sample</span></p>' +
       '<div class="filter-bar" data-filters></div>' +
       '<div data-list></div>';
 

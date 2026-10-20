@@ -37,7 +37,7 @@ PC.views.safety = function (el, params) {
 
     '<div class="card">' +
       '<div class="section-title">✓ Verification</div>' +
-      '<p>Verified members carry a ✓ badge on their profile. Requesting verification is free and simulated in this demo.</p>' +
+      '<p>Verified members carry a ✓ badge on their profile. Requesting verification is free and simulated in this sample.</p>' +
       '<button class="btn btn-primary" id="sfVerify">Request verification</button>' +
     '</div>' +
 

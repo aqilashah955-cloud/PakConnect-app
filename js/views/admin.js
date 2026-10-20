@@ -98,7 +98,7 @@ function adVerificationHTML() {
     var id = v.userId || v.id;
     var u = null;
     try { u = PC.store.getUser(id); } catch (e) { u = null; }
-    /* Steps submitted by the 3-step demo flow: {liveness, id, social}. */
+    /* Steps submitted by the 3-step sample flow: {liveness, id, social}. */
     var steps = v.steps || {};
     var stepsHTML = '<div style="opacity:.75;font-size:.88em;margin-top:4px;">' +
       '👁 Liveness: ' + (steps.liveness ? '✓' : '—') + ' &nbsp;·&nbsp; ' +
@@ -113,7 +113,7 @@ function adVerificationHTML() {
       '<button class="btn btn-ghost btn-sm" data-reject="' + esc(id) + '">Reject</button></span>' +
     '</div>';
   }).join('');
-  return '<p style="color:var(--muted,#666);font-size:.85em;">Demo verification queue — submissions are simulated; approving grants the ✓ Verified badge.</p>' + items;
+  return '<p style="color:var(--muted,#666);font-size:.85em;">Sample verification queue — submissions are simulated; approving grants the ✓ Verified badge.</p>' + items;
 }
 
 /* ---- Suspicious tab ---- */
@@ -241,7 +241,7 @@ function adWireTab(el) {
       PC.router.refresh();
     } else if (attr('data-remove')) {
       var rid = attr('data-remove');
-      PC.ui.confirmDlg('Remove this user permanently from the demo?').then(function (ok) {
+      PC.ui.confirmDlg('Remove this user permanently from the sample?').then(function (ok) {
         if (!ok) return;
         PC.store.removeUser(rid);
         PC.ui.toast('User removed');
@@ -287,7 +287,7 @@ PC.views.admin = function (el, params) {
 
   el.innerHTML =
     '<div class="page-title">🛠️ Admin dashboard</div>' +
-    '<div class="card"><p><b>Demo moderation tools.</b> Actions apply to the local demo data on this device only.</p></div>' +
+    '<div class="card"><p><b>Sample moderation tools.</b> Actions apply to the local sample data on this device only.</p></div>' +
     '<div class="tabs">' + tabs.map(function (t) {
       return '<button class="tab' + (adTab === t[0] ? ' tab-on' : '') + '" data-atab="' + t[0] + '">' + t[1] + '</button>';
     }).join('') + '</div>' +

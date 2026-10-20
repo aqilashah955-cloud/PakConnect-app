@@ -1,6 +1,6 @@
 window.PC = window.PC || {};
 PC.views = PC.views || {};
-/* PakConnect — Mehfil: live audio discussion rooms (simulated demo).
+/* PakConnect — Mehfil: live audio discussion rooms (simulated sample).
    Routes wired by another agent: 'mehfil' (#/mehfil), 'mehfilRoom' (#/mehfil/:id). */
 
 /* EXT-POINT: webrtc-audio — replace simulated room with real WebRTC audio when backend exists */
@@ -31,7 +31,7 @@ PC.views = PC.views || {};
           '<div style="font-weight:600">' + U.esc(user ? user.name : 'Guest') + '</div>' +
           '<div style="font-size:.82em;color:var(--muted,#666)">' +
             (isHost ? '🎤 Host' : '🎤 Speaker') +
-            (raised ? ' · <span class="badge badge-demo">demo</span>' : '') +
+            (raised ? ' · <span class="badge badge-demo">sample</span>' : '') +
           '</div>' +
         '</div>' +
         '<span style="font-size:1.3em" title="Speaking">🎙️</span>' +
@@ -49,7 +49,7 @@ PC.views = PC.views || {};
     var wrap = document.createElement('div');
     wrap.innerHTML =
       '<div class="page-title">🎙️ Mehfil — live audio discussions</div>' +
-      '<p style="color:var(--muted,#666);margin-top:0">Pull up a chair. Live voice conversations with Pakistanis around the world. <span class="badge badge-demo">Demo</span> <span style="font-size:.85em">rooms are simulated.</span></p>' +
+      '<p style="color:var(--muted,#666);margin-top:0">Pull up a chair. Live voice conversations with Pakistanis around the world. <span class="badge badge-demo">Sample</span> <span style="font-size:.85em">rooms are simulated.</span></p>' +
       '<div class="tabs">' +
         '<button class="tab tab-on" data-tab="live">🔴 Live now' + (live.length ? ' (' + live.length + ')' : '') + '</button>' +
         '<button class="tab" data-tab="upcoming">📅 Upcoming' + (upcoming.length ? ' (' + upcoming.length + ')' : '') + '</button>' +
@@ -98,7 +98,7 @@ PC.views = PC.views || {};
       '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">' +
         '<span class="live-dot" aria-hidden="true"></span>' +
         '<b style="color:#c0392b">LIVE</b>' +
-        '<span class="badge badge-demo">demo</span>' +
+        '<span class="badge badge-demo">sample</span>' +
         '<span class="chip">' + U.esc(topicTitle(room.topicId)) + '</span>' +
       '</div>' +
       '<div style="font-weight:600;font-size:1.05em">' + U.esc(room.title) + '</div>' +
@@ -126,7 +126,7 @@ PC.views = PC.views || {};
       '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">' +
         '<span class="chip">📅 ' + U.esc(when) + '</span>' +
         '<span class="chip">' + U.esc(topicTitle(room.topicId)) + '</span>' +
-        '<span class="badge badge-demo">demo</span>' +
+        '<span class="badge badge-demo">sample</span>' +
       '</div>' +
       '<div style="font-weight:600;font-size:1.05em">' + U.esc(room.title) + '</div>' +
       (room.desc ? '<div style="color:var(--muted,#666);margin:6px 0">' + U.esc(room.desc) + '</div>' : '') +
@@ -134,7 +134,7 @@ PC.views = PC.views || {};
         (room.listeners ? ' · 👂 ' + U.esc(String(room.listeners)) + ' waiting' : '') + '</div>' +
       '<button class="btn btn-ghost btn-sm" data-remind>🔔 Remind me</button>';
     card.querySelector('[data-remind]').addEventListener('click', function () {
-      ui.toast("We'll remind you (demo).");
+      ui.toast("We'll remind you (sample).");
     });
     return card;
   }
@@ -169,7 +169,7 @@ PC.views = PC.views || {};
     head += room.live
       ? '<span class="live-dot" aria-hidden="true"></span><b style="color:#c0392b">LIVE</b>'
       : '<span class="chip">📅 ' + U.esc(room.startsAt ? new Date(room.startsAt).toLocaleString() : 'Scheduled') + '</span>';
-    head += '<span class="badge badge-demo">demo</span>' +
+    head += '<span class="badge badge-demo">sample</span>' +
       '<span class="chip">' + U.esc(topicTitle(room.topicId)) + '</span></div>';
     if (room.desc) head += '<p style="color:var(--muted,#666);margin-top:0">' + U.esc(room.desc) + '</p>';
     wrap.innerHTML = head;
@@ -186,7 +186,7 @@ PC.views = PC.views || {};
     stageHtml += '<div style="margin-top:12px;display:flex;align-items:center;gap:8px">' +
       '<span style="font-size:1.1em">👂</span>' +
       '<b data-listener-count>' + baseListeners + '</b>' +
-      '<span style="color:var(--muted,#666);font-size:.85em">listening · <span class="badge badge-demo">demo ticker</span></span>' +
+      '<span style="color:var(--muted,#666);font-size:.85em">listening · <span class="badge badge-demo">sample ticker</span></span>' +
     '</div>';
     stage.innerHTML = stageHtml;
     wrap.appendChild(stage);
@@ -198,7 +198,7 @@ PC.views = PC.views || {};
     lbox.innerHTML =
       '<div class="section-title">Listeners</div>' +
       '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">' + lisAvatars +
-        '<span style="color:var(--muted,#666);font-size:.85em">+ ' + U.esc(String(Math.max(0, baseListeners - 6))) + ' more (demo)</span>' +
+        '<span style="color:var(--muted,#666);font-size:.85em">+ ' + U.esc(String(Math.max(0, baseListeners - 6))) + ' more (sample)</span>' +
       '</div>';
     wrap.appendChild(lbox);
 
@@ -210,7 +210,7 @@ PC.views = PC.views || {};
       (joined ? '' : '<button class="btn btn-primary" data-joinroom style="margin-bottom:8px">Join room</button><br>') +
       '<button class="btn" data-hand>' + (handRaised ? '✋ Hand raised — you\'re on the speaker list' : '✋ Raise hand') + '</button> ' +
       '<button class="btn btn-ghost" data-leave>Leave room</button>' +
-      '<p style="font-size:.82em;color:var(--muted,#666);margin-bottom:0">Room audio is simulated in this demo — no real microphone or speaker access is used.</p>';
+      '<p style="font-size:.82em;color:var(--muted,#666);margin-bottom:0">Room audio is simulated in this sample — no real microphone or speaker access is used.</p>';
     var joinBtn = act.querySelector('[data-joinroom]');
     if (joinBtn) {
       joinBtn.addEventListener('click', function () {
@@ -232,7 +232,7 @@ PC.views = PC.views || {};
 
     el.appendChild(wrap);
 
-    // Live listener ticker: ±1-3 every 4s (demo). Cleaned up on hashchange.
+    // Live listener ticker: ±1-3 every 4s (sample). Cleaned up on hashchange.
     var countEl = wrap.querySelector('[data-listener-count]');
     if (countEl && room.live) {
       if (window._pcMehfilTicker) clearInterval(window._pcMehfilTicker);
