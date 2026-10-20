@@ -3,10 +3,10 @@ PC.views = PC.views || {};
 /* PakConnect — messaging views: thread list + single chat (chat realism: presence,
    timestamps, read receipts, voice notes, emoji reactions, typing indicator). */
 
-/* IMPLEMENTED: typing-indicator — "… typing" bubble while the demo auto-reply is due. */
+/* IMPLEMENTED: typing-indicator — "… typing" bubble while the sample auto-reply is due. */
 /* IMPLEMENTED: message-reactions — emoji reactions on individual messages. */
 /* EXT-POINT: message-attachments — photo attachments (voice notes implemented). */
-/* EXT-POINT: read-receipts — read timestamps per message instead of demo heuristic. */
+/* EXT-POINT: read-receipts — read timestamps per message instead of sample heuristic. */
 
 (function () {
   'use strict';
@@ -420,7 +420,7 @@ PC.views = PC.views || {};
 
     /* Messages */
     var msgsArr = thread.messages || [];
-    /* Read heuristic (demo): my message counts as read once the other side sent anything after it. */
+    /* Read heuristic (sample): my message counts as read once the other side sent anything after it. */
     var myReadAfter = {};
     (function () {
       var lastOtherIdx = -1;
@@ -599,8 +599,8 @@ PC.views = PC.views || {};
       }
       function simulatedMode() {
         var lbl = document.getElementById('recLabel');
-        if (lbl) lbl.textContent = '● Recording (demo)';
-        ui.toast('Demo mode: mic unavailable — this sends a simulated voice note.');
+        if (lbl) lbl.textContent = '● Recording (sample)';
+        ui.toast('Sample mode: mic unavailable — this sends a simulated voice note.');
         stopBtn.onclick = function () {
           if (!recSession || !recSession.active) return;
           recSession.active = false;

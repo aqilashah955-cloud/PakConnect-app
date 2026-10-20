@@ -43,7 +43,7 @@ PC.views = PC.views || {};
       '<div class="conn-main">' +
         '<div class="conn-name">' + esc(u.name) +
           (u.verified ? ' <span class="badge badge-verified">✓ Verified</span>' : '') +
-          (u.demo ? ' <span class="badge badge-demo">Demo</span>' : '') +
+          (u.demo ? ' <span class="badge badge-demo">Sample</span>' : '') +
         '</div>' +
         '<div class="conn-meta">' + metaLine(u) + '</div>' +
       '</div>' +

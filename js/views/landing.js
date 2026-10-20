@@ -4,7 +4,7 @@ PC.views = PC.views || {};
 /* PakConnect landing / marketing page.
    Full public marketing page: hero, trust chips, how-it-works, modes,
    SEO sections, stats band, safety strip, footer.
-   EXT-POINT: hero-auth — swap the demo CTAs for real backend auth when available.
+   EXT-POINT: hero-auth — swap the sample CTAs for real backend auth when available.
    EXT-POINT: analytics — page-view / CTA tracking can hook into the wired buttons.
 */
 PC.views.landing = function(el, params){
@@ -82,7 +82,7 @@ PC.views.landing = function(el, params){
   var heroCta = onboarded
     ? '<button type="button" class="btn btn-primary" id="lpPrimary">Open PakConnect</button>'
     : '<button type="button" class="btn btn-primary" id="lpPrimary">Get started \u2014 it\u2019s free</button>' +
-      '<button type="button" class="btn btn-ghost" id="lpDemo">Explore demo</button>';
+      '<button type="button" class="btn btn-ghost" id="lpDemo">Explore sample</button>';
 
   var hero = '<header class="hero card">' +
       '<div class="lp-star-wrap">' + STAR + STAR + STAR + '</div>' +
@@ -144,7 +144,7 @@ PC.views.landing = function(el, params){
         '<button type="button" data-go="/communities">Communities</button>' +
         '<button type="button" data-go="/safety">Safety</button>' +
       '</nav>' +
-      '<p class="lp-demo-note">Demo experience \u2014 data stays on your device.</p>' +
+      '<p class="lp-demo-note">Sample experience \u2014 data stays on your device.</p>' +
     '</footer>';
 
   el.innerHTML = '<div class="lp-wrap">' +
@@ -157,24 +157,24 @@ PC.views.landing = function(el, params){
     go(onboarded ? "/discover" : "/onboarding");
   });
 
-  var demo = el.querySelector("#lpDemo");
-  if (demo) demo.addEventListener("click", function(){
-    // One-tap demo profile so "Explore demo" works without the wizard.
+  var sample = el.querySelector("#lpDemo");
+  if (sample) sample.addEventListener("click", function(){
+    // One-tap sample profile so "Explore sample" works without the wizard.
     // EXT-POINT: demo-mode — replace with guest session when backend exists.
     PC.store.createMe({
-      id: "me", name: "Demo Explorer", age: 28, gender: "Prefer not to say",
+      id: "me", name: "Sample Explorer", age: 28, gender: "Prefer not to say",
       country: "Worldwide", city: "Everywhere", background: "Friend of the culture",
       education: "", profession: "", languages: ["English", "Urdu"],
       interests: ["Travel", "Food", "Technology", "Books"],
       traits: ["Curious", "Friendly"], values: ["Education", "Family"],
-      goals: "Exploring PakConnect.", about: "Just exploring the demo.",
+      goals: "Exploring PakConnect.", about: "Just exploring the sample.",
       lookingFor: ["Friendship", "Discussions"], mode: "Friendship",
       favTopics: ["culture", "travel", "food"], verified: false, flagged: false,
       demo: false, privacy: { visibility: "everyone", hideAge: false, restrictUnknown: false },
       marriagePrefs: null
     });
     PC.store.saveSettings({ onboarded: true });
-    toast("Exploring the demo \u2014 all data stays on this device.");
+    toast("Exploring the sample \u2014 all data stays on this device.");
     go("/discover");
   });
 

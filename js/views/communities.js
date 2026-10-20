@@ -22,7 +22,7 @@ window.PC = window.PC || {};
     var intro = document.createElement('div');
     intro.innerHTML =
       '<p style="color:var(--muted,#666);margin-top:0">Find your people. Each community gathers Pakistanis living in the same country — swap stories, plan meetups, and help each other settle in.</p>' +
-      '<p style="color:var(--muted,#666);font-size:.85em">Member counts shown are demo counts.</p>';
+      '<p style="color:var(--muted,#666);font-size:.85em">Member counts shown are sample counts.</p>';
 
     var stats = S.communityStats();
     var byCountry = {};
@@ -64,7 +64,7 @@ window.PC = window.PC || {};
     head.innerHTML =
       '<div class="section-title">💬 Country group chats</div>' +
       '<p style="color:var(--muted,#666);margin-top:0">Jump into the conversation for your country — or lurk in another community\'s chat to see what they\'re talking about.</p>' +
-      '<p style="color:var(--muted,#666);font-size:.85em">Member counts shown are demo counts.</p>';
+      '<p style="color:var(--muted,#666);font-size:.85em">Member counts shown are sample counts.</p>';
     host.appendChild(head);
     var body = document.createElement('div');
     if (PC.views && typeof PC.views.groupchatListHTML === 'function') {
@@ -100,7 +100,7 @@ window.PC = window.PC || {};
     teaser.innerHTML =
       (rows || '<p style="opacity:.7;">No events yet — be the first to plan one.</p>') +
       '<button class="btn btn-primary" data-events style="margin-top:8px;">Browse all events</button>' +
-      '<p style="color:var(--muted,#666);font-size:.85em;margin-bottom:0;">Event details are demo content.</p>';
+      '<p style="color:var(--muted,#666);font-size:.85em;margin-bottom:0;">Event details are sample content.</p>';
     teaser.querySelector('[data-events]').addEventListener('click', function () { PC.router.go('/events'); });
     host.appendChild(teaser);
   }

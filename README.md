@@ -1,12 +1,12 @@
 # PakConnect — Connect with Pakistanis Worldwide
 
-A premium, mobile-first, **static front-end demo** of the PakConnect global social
+A premium, mobile-first, **static front-end sample** of the PakConnect global social
 connection platform for Pakistanis and friends of Pakistani culture (18+).
 **No backend, no network calls** — all state lives in `localStorage`, so the app
 opens straight from `file://` and works fully offline.
 
-> Demo build: profiles, discussions, messages and admin data are clearly badged
-> "Demo". Nothing leaves the device.
+> Sample build: profiles, discussions, messages and admin data are clearly badged
+> "Sample". Nothing leaves the device.
 
 ## Run it
 
@@ -16,7 +16,7 @@ opens straight from `file://` and works fully offline.
 
 First visit lands on the marketing page → **Get started** → 7-step onboarding
 (18+ DOB gate first) → Discover. State persists in `localStorage` key
-`pakconnect_v1`; "Reset demo data" in Profile restores the seed.
+`pakconnect_v1`; "Reset sample data" in Profile restores the seed.
 
 ## Structure
 
@@ -24,7 +24,7 @@ First visit lands on the marketing page → **Get started** → 7-step onboardin
 index.html          App shell: SEO meta/OG/JSON-LD, topbar, bottom nav, script boot order
 styles.css          Warm design system (deep teal + amber/sand), light/dark via [data-theme]
 CONTRACT.md         Shared API contract every module follows
-js/data.js          Seed data: 12 demo profiles, 15 discussion topics, threads, reports,
+js/data.js          Seed data: 12 sample profiles, 15 discussion topics, threads, reports,
                     starters, guidelines, community counts, premium feature list
 js/util.js          PC.util (esc, avatars, matchScore, constants) + PC.ui (toast/modal/confirm)
 js/store.js         PC.store — localStorage persistence + all domain logic
@@ -39,13 +39,13 @@ js/views/communities.js  9 country/region community cards → filtered Discover
 js/views/profile.js      My profile, menu, full profile editor (views.profile/.profileEdit)
 js/views/marriage.js     Optional Marriage Mode prefs + consent-gated family invite (simulated)
 js/views/safety.js       Guidelines, scam warnings, block/report help, verification request
-js/views/admin.js        Demo moderation: users, reports, verification queue, suspicious
+js/views/admin.js        Sample moderation: users, reports, verification queue, suspicious
                     accounts, discussion moderation, analytics
 js/views/stories.js      Stories (build 2): story tray + full-screen viewer
 js/views/groupchat.js    Community group chats (build 2): per-country rooms
 js/views/mehfil.js       Mehfil live audio rooms (build 2): rooms list + room view
 js/views/events.js       Community events (build 2): list + RSVP
-js/views/premium.js      Premium (build 2): profile premium card + demo checkout page
+js/views/premium.js      Premium (build 2): profile premium card + sample checkout page
 ```
 
 Hash routes: `#/` `#/onboarding` `#/discover` `#/discussions` `#/discussions/:topic`
@@ -72,13 +72,13 @@ Hash routes: `#/` `#/onboarding` `#/discover` `#/discussions` `#/discussions/:to
 - **Communities tabs:** Members (original country cards) · 💬 Group chats
   (per-country rooms, `#/gchat/:country`) · 📅 Events teaser.
 
-### How the Premium demo works
+### How the Premium sample works
 
 - **Free:** 10 Connects/day, 20 Interested/day. **Premium: PKR 499/month**, unlimited.
-- Profile → **Subscribe (demo checkout)** opens `#/premium`, which shows a
-  "🧪 Demo checkout — no real payment is processed" banner. **Pay PKR 499** simply
-  flips your demo tier (`S.setPremium('premium')`) in localStorage — nothing real
-  happens, and "Reset demo data" restores Free.
+- Profile → **Subscribe (sample checkout)** opens `#/premium`, which shows a
+  "🧪 Sample checkout — no real payment is processed" banner. **Pay PKR 499** simply
+  flips your sample tier (`S.setPremium('premium')`) in localStorage — nothing real
+  happens, and "Reset sample data" restores Free.
 - With Premium active the profile card shows toggles for **🚀 Profile Boost** and
   **🕵️ Incognito**, persisted via the store. **Cancel Premium** flips back to Free.
 
@@ -102,7 +102,7 @@ Hash routes: `#/` `#/onboarding` `#/discover` `#/discussions` `#/discussions/:to
 
 `premium-subscriptions` · `verified-profiles` · `community-groups` ·
 `video-calls` · `backend-sync` / `backend-auth` · photo uploads · moderation AI.
-Premium ships with a demo checkout (no real payment); the real-billing hook is
+Premium ships with a sample checkout (no real payment); the real-billing hook is
 marked in `js/views/premium.js`.
 
 ## Verification

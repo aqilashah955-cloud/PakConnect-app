@@ -1,7 +1,7 @@
 # PakConnect — Shared Build Contract v2
 
 Build 2 additions: stories, voice notes, Mehfil live audio rooms, events, polls,
-profile prompts, Today's Picks, verification badges, real premium tiers (demo
+profile prompts, Today's Picks, verification badges, real premium tiers (sample
 checkout), chat reactions/typing/online status, community group chats, badges,
 login streaks. All still plain `<script>`, no modules, `file://` safe.
 
@@ -49,7 +49,7 @@ connections, messages, communities, profile, marriage, safety, admin,
 - `connectionLists()` — `{connected:[user], interested:[user], passed:[user]}`
 - `threads()` — enriched `[{id, user, messages, lastTs}]`, newest first
 - `getThread(id)`, `getOrCreateThread(userId)` → `{thread}` or `{error:'blocked'|'restricted'|'self'}`
-- `sendMessage(threadId, text)` — also auto-replies once per thread with a friendly canned demo reply
+- `sendMessage(threadId, text)` — also auto-replies once per thread with a friendly canned sample reply
 - `setDraft(threadId, text)`, `consumeDraft(threadId)` — prefill chat input (used by discussion prompts)
 - `blockUser(id)`, `unblockUser(id)`, `isBlocked(id)`, `blockedUsers()`
 - `fileReport(targetId, reason, detail)`, `reports()`, `resolveReport(id, action)` —
@@ -63,7 +63,7 @@ connections, messages, communities, profile, marriage, safety, admin,
 - `filterUsers(f)` — f may contain q,minAge,maxAge,country,city,interest,profession,education,
   language,value,trait,intention,background. Honors profile privacy visibility.
 - `requestVerification()`, `verifications()`, `approveVerification(userId)`, `rejectVerification(userId)`
-- `submitVerificationSteps({liveness, id, social})` — 3-step demo flow; stores
+- `submitVerificationSteps({liveness, id, social})` — 3-step sample flow; stores
   `{status:'pending', steps:{liveness:true, id:true, social:''|url}}`;
   `myVerification()` → `{status, steps} | null`. Approve → status 'approved' +
   grants the verified badge (visible via `S.myBadges()` / `me.verified`).
@@ -120,7 +120,7 @@ Seed data lives in `PC.seed` (data.js): `users`, `topics`, `discussionThreads`,
 Bottom-nav `active` keys: discover, discussions, connections, messages, communities, profile.
 Build-2 views: `stories` (story viewer), `mehfil` (live audio rooms list),
 `mehfilRoom` (a room), `events` (community events + RSVP), `gchat` (country
-group chat room), `premium` (demo checkout page), `profileEdit` (now includes
+group chat room), `premium` (sample checkout page), `profileEdit` (now includes
 the profile-prompts editor + 3-step verification flow).
 Cross-view helpers: `PC.views.premiumCard()` → HTML string (profile premium slot;
 wired via delegation inside premium.js); `PC.views.storyTrayHTML()` (Discover;
@@ -141,9 +141,9 @@ Build 2 additions (styles.css): `.story-tray .story-item .story-ring
 .streak-chip .prompt-card .event-date .mehfil-live-dot (pulses)
 .story-bg-0 … .story-bg-5` (story background gradients).
 
-## Premium enforcement rules (demo)
+## Premium enforcement rules (sample)
 - Free tier limits: **10 Connects/day, 20 Interested/day**. Premium: unlimited.
-- Price point shown: **PKR 499/month**. Checkout is a demo — "🧪 Demo checkout —
+- Price point shown: **PKR 499/month**. Checkout is a sample — "🧪 Sample checkout —
   no real payment is processed"; the Pay button only flips `S.setPremium('premium')`.
 - Enforcement must read `S.premiumTier()` / `S.isPremium()` in the store; views
   only display the tier and flip it. Premium extras: Profile Boost (`S.setBoost`)

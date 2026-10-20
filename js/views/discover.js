@@ -146,7 +146,7 @@ PC.views = PC.views || {};
         '<div>' +
           '<div class="discover-name">' + esc(u.name) +
             (u.verified ? ' <span class="badge badge-verified">✓ Verified</span>' : '') +
-            (u.demo ? ' <span class="badge badge-demo">Demo</span>' : '') +
+            (u.demo ? ' <span class="badge badge-demo">Sample</span>' : '') +
           '</div>' +
           '<div class="discover-meta">' + age + (loc ? ' · ' + loc : '') + '</div>' +
         '</div>' +
